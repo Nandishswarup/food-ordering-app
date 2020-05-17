@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Header from '../../common/header/header';
+import Header from '../../common/header/Header';
 import { Typography, CardContent, Button, withStyles, CardHeader } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faRupeeSign, faCircle, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
