@@ -20,8 +20,10 @@ class Home extends Component {
     constructor(props) {
         super();
         this.onSearchChangeListener = this.onSearchChangeListener.bind(this);
+        this.openProfile = this.openProfile.bind(this);
 
         this.state = {
+            noResult:"no-result-gone",
             showSearch: "true",
             access_token: "",
             restaurants: [{
@@ -55,6 +57,12 @@ class Home extends Component {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({restaurants: JSON.parse(this.responseText).restaurants});
+                console.log(JSON.parse(this.responseText).restaurants.length)
+                if(JSON.parse(this.responseText).restaurants.length==0)
+                    that.setState({noResult:"no-result-visible"})
+                else
+                    that.setState({noResult:"no-result-gone"})
+
                 console.log(that.state.restaurants)
             }
         })
@@ -99,14 +107,26 @@ class Home extends Component {
         this. getRestarauntList();
 
     }
+    openProfile=()=>
+    {
+        this.props.history.push({
+            pathname: "/profile",
+            state: {
+                defaultAccessToken: this.state.defaultAccessToken
+
+            }
+        })
+    }
 
 
     render() {
         const {classes} = this.props;
 
         return (<div>
-            <Header baseUrl={this.props.baseUrl} showSearch={this.state.showSearch} onChanged={this.onSearchChangeListener}></Header>
+            <Header baseUrl={this.props.baseUrl} showSearch={this.state.showSearch} onChanged={this.onSearchChangeListener} onMyProfileClickHandler={this.openProfile}></Header>
 
+         <div className={this.state.noResult}>
+             No restaurant with the given name</div>
             <div className="grid-layout">
                 <Grid
                     container spacing={4}

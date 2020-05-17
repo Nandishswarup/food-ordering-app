@@ -55,13 +55,13 @@
 }
 .account-icon{
     color: white;
+    margin-right: 5px;
 }
 .profile{
     display: flex;
     align-items: center;
     cursor: pointer;
     color: white;
-    white-space: break-spaces;
 
 
 

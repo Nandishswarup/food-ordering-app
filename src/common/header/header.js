@@ -108,7 +108,8 @@ class Header extends Component {
             contactSignupErrorMessage: "required",
             showSnackbar: false,
             snackbarMessage: "",
-            first_name:""
+            first_name:"",
+            first_name_profile:localStorage.getItem("first_name"),
 
         }
 
@@ -276,7 +277,7 @@ class Header extends Component {
                 that.setState({
                     loggedIn: true
                 });
-                that.setState({first_name:JSON.parse(this.responseText).first_name})
+                that.setState({first_name_profile:JSON.parse(this.responseText).first_name})
                 localStorage.setItem("first_name", JSON.parse(this.responseText).first_name);
                 localStorage.setItem("last_name", JSON.parse(this.responseText).last_name);
 
@@ -330,15 +331,48 @@ class Header extends Component {
         this.setState({contact: e.target.value});
     }
 
+    /**
+     USER LOGOUT API
+     **/
+
     logoutHandler = (e) => {
 
-         sessionStorage.removeItem("uuid");
-         sessionStorage.removeItem("access-token");
+        let dataLogout = null;
+        let xhrLogout = new XMLHttpRequest();
+        let that = this;
+        xhrLogout.addEventListener("readystatechange", function () {
 
-         this.setState({
-             loggedIn: false,
-             menuvisible:false,
-         });
+
+            if (this.readyState === 4 && xhrLogout.status === 200) {
+                sessionStorage.removeItem("uuid");
+                sessionStorage.removeItem("access-token");
+
+                that.setState({
+                    loggedIn: false,
+                    menuvisible:false,
+                });
+
+            } else if(xhrLogout.status != 200){
+                console.log("ELSE")
+
+                that.setState({
+                    value: 0,
+                    showSnackbar: true,
+                    snackbarMessage: JSON.parse(this.responseText).message
+                })
+
+
+
+            }
+
+        });
+
+        xhrLogout.open("POST", this.props.baseUrl + "customer/logout");
+        xhrLogout.setRequestHeader("Authorization",  sessionStorage.getItem("access-token"));
+        xhrLogout.setRequestHeader("Content-Type", "application/json");
+        xhrLogout.setRequestHeader("Cache-Control", "no-cache");
+        xhrLogout.send(dataLogout);
+
     }
     openMenu=(e)=>{
         this.setState({menuvisible: true})
@@ -391,7 +425,7 @@ class Header extends Component {
                             :
                             <span className="profile" onClick={this.openMenu}>
 
-                                <AccountCircleIcon className="account-icon"></AccountCircleIcon>  {this.state.first_name}
+                                <AccountCircleIcon className="account-icon"></AccountCircleIcon>     {this.state.first_name_profile}
 
                             </span>
 
@@ -403,7 +437,7 @@ class Header extends Component {
                             anchorEl={this.state.anchorEl}
                             onClose={this.handleClose}
                         >
-                          <MenuItem onClick={this.openProfile}>Profile</MenuItem>
+                          <MenuItem onClick={this.props.onMyProfileClickHandler}>My Profile</MenuItem>
                           <MenuItem onClick={this.logoutHandler}>Logout</MenuItem>
 </Menu>
 

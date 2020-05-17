@@ -54,4 +54,17 @@
     font-size: 12px;
     font-weight: 600;
 }
+.no-result-visible{
+margin: 30px;
+    font-size: medium;
+    display:block;
 
+}
+
+.no-result-gone{
+    margin: 30px;
+
+    font-size: medium;
+    display:none;
+
+}
