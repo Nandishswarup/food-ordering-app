@@ -44,3 +44,29 @@
     width: 70%;
     margin-top: 200px;
 }
+.search-margin{
+    margin: 10px;
+    color: white;
+}
+.input-search{
+    color: white;
+    user-input: white;
+
+}
+.account-icon{
+    color: white;
+}
+.profile{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    white-space: break-spaces;
+
+
+
+}
+.menu-margin{
+    margin-top: 30px;
+
+}

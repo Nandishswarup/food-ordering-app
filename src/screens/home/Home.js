@@ -19,6 +19,8 @@ class Home extends Component {
 
     constructor(props) {
         super();
+        this.onSearchChangeListener = this.onSearchChangeListener.bind(this);
+
         this.state = {
             showSearch: "true",
             access_token: "",
@@ -35,9 +37,44 @@ class Home extends Component {
 
 
     }
+    onSearchChangeListener = event => {
+        this.state.posts = []
 
-    componentWillMount() {
-        this.state.access_token = sessionStorage.getItem("access-token")
+
+        var enteredvalue = event.target.value;
+
+        if(enteredvalue==="") {
+            this.getRestarauntList()
+            return
+        }
+        console.log(enteredvalue)
+
+        let list = null;
+        let xhr = new XMLHttpRequest();
+        let that = this;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({restaurants: JSON.parse(this.responseText).restaurants});
+                console.log(that.state.restaurants)
+            }
+        })
+
+
+        let url = this.props.baseUrl + "/restaurant/name/"+enteredvalue
+        console.log("url" + url);
+        xhr.open("GET", url);
+        xhr.send(list);
+
+
+
+
+
+    }
+
+
+    getRestarauntList=()=>
+    {
+
         let list = null;
         let xhr = new XMLHttpRequest();
         let that = this;
@@ -57,12 +94,18 @@ class Home extends Component {
 
     }
 
+    componentWillMount() {
+        this.state.access_token = sessionStorage.getItem("access-token")
+        this. getRestarauntList();
+
+    }
+
 
     render() {
         const {classes} = this.props;
 
         return (<div>
-            <Header baseUrl={this.props.baseUrl} showSearch={this.state.showSearch}></Header>
+            <Header baseUrl={this.props.baseUrl} showSearch={this.state.showSearch} onChanged={this.onSearchChangeListener}></Header>
 
             <div className="grid-layout">
                 <Grid

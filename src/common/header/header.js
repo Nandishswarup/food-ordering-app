@@ -15,6 +15,13 @@ import ReactModal from 'react-modal';
 import Snackbar from '@material-ui/core/Snackbar';
 
 import Modal from 'react-modal';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import SearchIcon from '@material-ui/icons/Search';
+import {makeStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 const customStyles = {
@@ -40,13 +47,41 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 }
 
+const StyledButton = withStyles({
+    root: {
+
+        color: 'white',
+        minWidth: '250px',
+        borderColor: 'white',
+        '& $notchedOutline': {
+            borderColor: 'rgba(0, 0, 0, 0.23)',
+        },
+        '&:hover:not($disabled):not($focused):not($error) $notchedOutline': {
+            borderColor: '#4A90E2',
+            // Reset on touch devices, it doesn't add specificity
+            '@media (hover: none)': {
+                borderColor: 'rgba(0, 0, 0, 0.23)',
+            },
+        },
+        '&$focused $notchedOutline': {
+            borderColor: '#4A90E2',
+            borderWidth: 1,
+        },
+    },
+    label: {
+        textTransform: 'capitalize',
+    },
+})(Input);
 
 class Header extends Component {
+
 
     constructor(props) {
 
         super(props);
         this.state = {
+            anchorEl:null,
+            menuvisible: false,
             showModal: false,
             modalIsOpen: false,
             value: 0,
@@ -72,7 +107,8 @@ class Header extends Component {
             passwordErrorMessage: "required",
             contactSignupErrorMessage: "required",
             showSnackbar: false,
-            snackbarMessage: ""
+            snackbarMessage: "",
+            first_name:""
 
         }
 
@@ -166,12 +202,12 @@ class Header extends Component {
 
             if (this.readyState === 4 && JSON.parse(this.responseText).status === "CUSTOMER SUCCESSFULLY REGISTERED") {
                 that.setState({
-                    registrationSuccess : true
+                    registrationSuccess: true
                 })
                 that.setState({
-                    value : 0,
-                    showSnackbar:true,
-                    snackbarMessage:"Registered successfully! Please login now!"
+                    value: 0,
+                    showSnackbar: true,
+                    snackbarMessage: "Registered successfully! Please login now!"
                 })
             } else {
 
@@ -240,6 +276,7 @@ class Header extends Component {
                 that.setState({
                     loggedIn: true
                 });
+                that.setState({first_name:JSON.parse(this.responseText).first_name})
                 localStorage.setItem("first_name", JSON.parse(this.responseText).first_name);
                 localStorage.setItem("last_name", JSON.parse(this.responseText).last_name);
 
@@ -294,16 +331,28 @@ class Header extends Component {
     }
 
     logoutHandler = (e) => {
-        sessionStorage.removeItem("uuid");
-        sessionStorage.removeItem("access-token");
 
-        this.setState({
-            loggedIn: false
-        });
+         sessionStorage.removeItem("uuid");
+         sessionStorage.removeItem("access-token");
+
+         this.setState({
+             loggedIn: false,
+             menuvisible:false,
+         });
+    }
+    openMenu=(e)=>{
+        this.setState({menuvisible: true})
+        this.setState({anchorEl:e.currentTarget})
+
+    }
+    handleClose=()=>{
+        this.setState({menuvisible: false})
+
     }
 
 
     render() {
+
         return (
             <div>
 
@@ -316,7 +365,17 @@ class Header extends Component {
 
 
                     <span className="header-center-align">
-                        search bar
+                        <FormControl>
+                            <StyledButton className="input-search" onChange={this.props.onChanged}
+                                          inputProps={{color: "#ffffff"}}
+                                          placeholder="Search by Restaurant Name"
+                                          id="input-with-icon-adornment"
+                                          startAdornment={
+                                              <InputAdornment position="start">
+                                                  <SearchIcon/>
+                                              </InputAdornment>
+                                          }/>
+                  </FormControl>
                     </span>
                     <span className="header-right-align">
 
@@ -330,13 +389,23 @@ class Header extends Component {
                                 LOGIN
                             </Button>
                             :
-                            <Button onClick={this.logoutHandler}
-                                    variant="contained"
-                                    color="default"
-                                    startIcon={<AccountCircleIcon/>}>
-                                LOG OUT
-                            </Button>
+                            <span className="profile" onClick={this.openMenu}>
+
+                                <AccountCircleIcon className="account-icon"></AccountCircleIcon>  {this.state.first_name}
+
+                            </span>
+
                         }
+                        <Menu className="menu-margin"
+                            id="simple-menu"
+                            keepMounted
+                            open={this.state.menuvisible}
+                            anchorEl={this.state.anchorEl}
+                            onClose={this.handleClose}
+                        >
+                          <MenuItem onClick={this.openProfile}>Profile</MenuItem>
+                          <MenuItem onClick={this.logoutHandler}>Logout</MenuItem>
+</Menu>
 
 
                         <ReactModal
