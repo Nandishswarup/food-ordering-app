@@ -131,7 +131,7 @@ class Home extends Component {
                 <Grid
                     container spacing={4}
                     direction="row"
-                    justify="flex-start"
+                    justify="center"
                     alignItems="flex-start">
 
                     {this.state.restaurants.map(restaurants => (
