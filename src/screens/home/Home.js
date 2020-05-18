@@ -23,8 +23,7 @@ const styles = theme => ({
         margin: 'auto',
     },
     restaurantCard: {
-        width: 290,
-        maxWidth: 300,
+        width: 410,
         height: 340,
         maxHeight: 340,
         marginTop: 15,
