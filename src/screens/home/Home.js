@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './home.css';
-import Header from './../../common/header/header';
+import Header from '../../common/header/Header';
 import {Card, colors} from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import {library} from '@fortawesome/fontawesome-svg-core'

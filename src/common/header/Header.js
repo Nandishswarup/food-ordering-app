@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import './header.css';
+import './Header.css';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -16,13 +16,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import Modal from 'react-modal';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
-import {makeStyles} from '@material-ui/core/styles';
 import {withStyles} from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 
 const customStyles = {
     content: {
@@ -263,7 +260,6 @@ class Header extends Component {
 
         }
 
-
         let dataLogin = null;
         let xhrLogin = new XMLHttpRequest();
         let that = this;
@@ -303,7 +299,7 @@ class Header extends Component {
 
         });
 
-        xhrLogin.open("POST", this.props.baseUrl + "customer/login");
+        xhrLogin.open("POST", `${this.props.baseUrl}customer/login`);
         xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
         xhrLogin.setRequestHeader("Content-Type", "application/json");
         xhrLogin.setRequestHeader("Cache-Control", "no-cache");
@@ -345,7 +341,7 @@ class Header extends Component {
 
             if (this.readyState === 4 && xhrLogout.status === 200) {
                 sessionStorage.removeItem("uuid");
-                sessionStorage.removeItem("access-token");
+                //sessionStorage.removeItem("access-token");
 
                 that.setState({
                     loggedIn: false,
@@ -360,15 +356,11 @@ class Header extends Component {
                     showSnackbar: true,
                     snackbarMessage: JSON.parse(this.responseText).message
                 })
-
-
-
             }
-
         });
 
-        xhrLogout.open("POST", this.props.baseUrl + "customer/logout");
-        xhrLogout.setRequestHeader("Authorization",  sessionStorage.getItem("access-token"));
+        xhrLogout.open("POST", `${this.props.baseUrl}customer/logout`);
+        xhrLogout.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem("access-token"));
         xhrLogout.setRequestHeader("Content-Type", "application/json");
         xhrLogout.setRequestHeader("Cache-Control", "no-cache");
         xhrLogout.send(dataLogout);
@@ -431,11 +423,11 @@ class Header extends Component {
 
                         }
                         <Menu className="menu-margin"
-                            id="simple-menu"
-                            keepMounted
-                            open={this.state.menuvisible}
-                            anchorEl={this.state.anchorEl}
-                            onClose={this.handleClose}
+                              id="simple-menu"
+                              keepMounted
+                              open={this.state.menuvisible}
+                              anchorEl={this.state.anchorEl}
+                              onClose={this.handleClose}
                         >
                           <MenuItem onClick={this.props.onMyProfileClickHandler}>My Profile</MenuItem>
                           <MenuItem onClick={this.logoutHandler}>Logout</MenuItem>

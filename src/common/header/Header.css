@@ -57,16 +57,11 @@
     color: white;
     margin-right: 5px;
 }
-.profile{
+.profile {
     display: flex;
     align-items: center;
     cursor: pointer;
     color: white;
-
-
-
 }
-.menu-margin{
-    margin-top: 30px;
 
-}
+
