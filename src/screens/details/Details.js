@@ -153,15 +153,21 @@ class Details extends Component {
         var count = this.state.cartItemsCount;
         var items = this.state.cartItems;
         var message = this.state.successMessage;
+        var cartItems = this.state.cartItems;
+
         var total = 0;
         count--;
 
         if (items.hasOwnProperty(itemName)) {
             items[itemName]["count"]--;
+            if (items[itemName]["count"] !== 0)
+                message = "Item quantity decreased by 1!"
+            else
+                message = "Item removed from cart!"
             Object.entries(this.state.cartItems).map(item => (
                 total += (item[1].count * item[1].price)
             ));
-            message = "Item removed from cart!"
+
             this.setState({
                 cartItems: items,
                 cartItemsCount: count,
@@ -169,9 +175,10 @@ class Details extends Component {
                 open: true,
                 successMessage: message
             });
-        }
-        else
-            return
+        } else
+            return;
+
+
     }
 
     // This function leads to the checkout page if the customer is logged in (determined if the access token is present).

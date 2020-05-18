@@ -192,7 +192,7 @@ class Home extends Component {
 
         return (
             <div>
-            <Header baseUrl={this.props.baseUrl} showSearch={this.state.showSearch} onChanged={this.onSearchChangeListener} onMyProfileClickHandler={this.openProfile} />
+            <Header baseUrl={this.props.baseUrl} showSearchBox={true} onChanged={this.onSearchChangeListener} onMyProfileClickHandler={this.openProfile} />
             <div className={this.state.noResult}>
              No restaurant with the given name
             </div>

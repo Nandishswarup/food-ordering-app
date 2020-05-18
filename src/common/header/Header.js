@@ -391,17 +391,24 @@ class Header extends Component {
 
 
                     <span className="header-center-align">
-                        <FormControl>
-                            <StyledButton className="input-search" onChange={this.props.onChanged}
-                                          inputProps={{color: "#ffffff"}}
-                                          placeholder="Search by Restaurant Name"
-                                          id="input-with-icon-adornment"
-                                          startAdornment={
-                                              <InputAdornment position="start">
-                                                  <SearchIcon/>
-                                              </InputAdornment>
-                                          }/>
-                  </FormControl>
+                        {
+                            this.props.showSearchBox ?
+                                <FormControl>
+                                    <StyledButton className="input-search" onChange={this.props.onChanged}
+                                                  inputProps={{color: "#ffffff"}}
+                                                  placeholder="Search by Restaurant Name"
+                                                  id="input-with-icon-adornment"
+                                                  startAdornment={
+                                                      <InputAdornment position="start">
+                                                          <SearchIcon/>
+                                                      </InputAdornment>
+                                                  }/>
+                                </FormControl>
+
+                                :
+                                null
+                        }
+
                     </span>
                     <span className="header-right-align">
 
