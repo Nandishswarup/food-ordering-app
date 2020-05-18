@@ -4,14 +4,15 @@ import Header from '../../common/header/Header';
 import {Card, colors} from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faCheckSquare, faCoffee, faStar} from '@fortawesome/free-solid-svg-icons'
+import {faStar} from '@fortawesome/free-solid-svg-icons'
 import GridListTile from "@material-ui/core/GridListTile";
 import GridList from "@material-ui/core/GridList";
 import {withStyles} from "@material-ui/styles";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
-library.add(faCheckSquare, faCoffee, faStar)
+library.add(faStar)
 
 
 const styles = theme => ({
@@ -20,10 +21,10 @@ const styles = theme => ({
         marginLeft: 25,
     },
     restaurantCardsGridList: {
-        margin: 'auto',
+        paddingRight:20,
     },
     restaurantCard: {
-        width: 410,
+        width: 380,
         height: 340,
         maxHeight: 340,
         marginTop: 15,
@@ -216,19 +217,19 @@ class Home extends Component {
                                         {restaurant.restaurant_name}
                                     </Typography>
                                     {/* restaurant categories */}
-                                    <Typography variant="body2" color="textSecondary" component="p" style={{marginBottom:8}}>
+                                    <div variant="body2" color="textSecondary" className="categories">
                                         {restaurant.categories}
-                                    </Typography>
-                                    <div className={classes.ratingAvgRateDiv}>
+                                    </div>
+                                    <div className="bottomcard-layout">
                                         {/* restaurant rating */}
                                         <div className={classes.restaurantRatingDiv}>
                                             <Typography className={classes.restaurantRatingText} variant='body2'>
-                                                <i className="fa fa-star"></i> {restaurant.customer_rating} ({restaurant.number_customers_rated})
+                                           <FontAwesomeIcon icon="star" color="white"/>{restaurant.customer_rating} ({restaurant.number_customers_rated})
                                             </Typography>
                                         </div>
                                         {/* restaurant average price */}
                                         <Typography className={classes.restaurantAvgRateText} variant='body2'>
-                                            <i className="fa fa-inr"></i>{restaurant.average_price} for two
+                                            <i className="fa fa-inr"></i>  {restaurant.average_price} for two
                                         </Typography>
                                     </div>
 
