@@ -33,7 +33,9 @@ import Divider from '@material-ui/core/Divider';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
+import {Redirect} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCircle, faRupeeSign} from "@fortawesome/free-solid-svg-icons";
 
 const styles = theme => ({
     stepperButton: {
@@ -131,15 +133,15 @@ class Checkout extends Component {
             activeStep: 0,
             tabValue: 0,
             selectedExistingAddress: null,
-            flatBuildingNoRequired: 'display-none',
+            flatBuildingNoRequired: 'dispNone',
             flatBuildingNo: '',
-            localityRequired: 'display-none',
+            localityRequired: 'dispNone',
             locality: '',
-            cityRequired: 'display-none',
+            cityRequired: 'dispNone',
             city: '',
-            stateRequired: 'display-none',
+            stateRequired: 'dispNone',
             newAddressState: '',
-            pincodeRequired: 'display-none',
+            pincodeRequired: 'dispNone',
             pincodeRequiredMsg: 'required',
             pincode: '',
             customerExistingAddresses: [],
@@ -268,51 +270,51 @@ class Checkout extends Component {
     saveAddressOnClickHandler = () => {
         let flatBuildingNoReq = false;
         if (this.state.flatBuildingNo === '') {
-            this.setState({ flatBuildingNoRequired: 'display-block' });
+            this.setState({ flatBuildingNoRequired: 'dispBlock' });
             flatBuildingNoReq = true;
         } else {
-            this.setState({ flatBuildingNoRequired: 'display-none' });
+            this.setState({ flatBuildingNoRequired: 'dispNone' });
         }
 
         let localityReq = false;
         if (this.state.locality === '') {
-            this.setState({ localityRequired: 'display-block' });
+            this.setState({ localityRequired: 'dispBlock' });
             localityReq = true;
         } else {
-            this.setState({ localityRequired: 'display-none' });
+            this.setState({ localityRequired: 'dispNone' });
         }
 
         let cityReq = false;
         if (this.state.city === '') {
-            this.setState({ cityRequired: 'display-block' });
+            this.setState({ cityRequired: 'dispBlock' });
             cityReq = true;
         } else {
-            this.setState({ cityRequired: 'display-none' });
+            this.setState({ cityRequired: 'dispNone' });
         }
 
         let stateReq = false;
         if (this.state.newAddressState === '') {
-            this.setState({ stateRequired: 'display-block' });
+            this.setState({ stateRequired: 'dispBlock' });
             stateReq = true;
         } else {
-            this.setState({ stateRequired: 'display-none' });
+            this.setState({ stateRequired: 'dispNone' });
         }
 
         let pincodeReq = false;
         if (this.state.pincode === '') {
             this.setState({
-                pincodeRequired: 'display-block',
+                pincodeRequired: 'dispBlock',
                 pincodeRequiredMsg: 'required'
             });
             pincodeReq = true;
         } else {
-            this.setState({ pincodeRequired: 'display-none' });
+            this.setState({ pincodeRequired: 'dispNone' });
         }
 
         let validatePincode = new RegExp('^[1-9][0-9]{5}$');
         if (pincodeReq === false && validatePincode.test(this.state.pincode) === false) {
             this.setState({
-                pincodeRequired: 'display-block',
+                pincodeRequired: 'dispBlock',
                 pincodeRequiredMsg: 'Pincode must contain only numbers and must be 6 digits long'
             });
             return;
@@ -376,7 +378,7 @@ class Checkout extends Component {
             function (i) {
                 return {
                     'item_id': i.id,
-                    'price': i.totalItemPrice,
+                    'price': i.price,
                     'quantity': i.count
                 }
             }
@@ -429,325 +431,334 @@ class Checkout extends Component {
         const { activeStep } = this.state;
         const { tabValue } = this.state;
 
-        return (
-            <div>
-                <Header />
+        if (this.state.loggedIn === false) {
+            return <Redirect to='/'/>
+        }
 
-                <Grid container={true} >
-                    <Grid item={true} xs={9}>
-                        <div>
-                            <Stepper activeStep={activeStep} orientation='vertical'>
-                                {steps.map((label, index) => (
-                                    <Step key={label}>
-                                        <StepLabel>{label}</StepLabel>
-                                        <StepContent>
-                                            {index === 0 ?
+        else {
+            return (
+                <div>
+                    <Header {...this.props} showSearchBox={false} />
 
-                                                // Tabs for existing and New Address
-                                                <div className={classes.tabRoot}>
-                                                    <AppBar position='static'>
-                                                        <Tabs value={tabValue} onChange={this.tabChangeHandler}>
-                                                            <Tab label='EXISTING ADDRESS' />
-                                                            <Tab label='NEW ADDRESS' />
-                                                        </Tabs>
-                                                    </AppBar>
+                    <Grid container={true} >
+                        <Grid item={true} xs={9}>
+                            <div>
+                                <Stepper activeStep={activeStep} orientation='vertical'>
+                                    {steps.map((label, index) => (
+                                        <Step key={label}>
+                                            <StepLabel>{label}</StepLabel>
+                                            <StepContent>
+                                                {index === 0 ?
 
-                                                    {/* Existing Address */}
-                                                    {tabValue === 0 &&
-                                                    <TabContainer className={classes.existingAddressTabContainer}>
-                                                        {this.state.customerExistingAddresses === null ?
-                                                            <Typography variant='h6' color='textSecondary'>
-                                                                There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option.
-                                                            </Typography>
-                                                            :
-                                                            <GridList
-                                                                className={classes.gridList}
-                                                                cols={3}
-                                                                cellHeight='auto'
-                                                            >
-                                                                {this.state.customerExistingAddresses.map(address => (
-                                                                    <GridListTile
-                                                                        key={'address' + address.id}
-                                                                        id={this.state[address.id] || 'unselect-address'}
-                                                                        onClick={() => this.existingAddressOnClickHandler(address.id)}
-                                                                        className={classes.existingAddressGridListTile}
-                                                                        classes={{ tile: classes.existingAddressGridListTileTile }}
-                                                                    >
+                                                    // Tabs for existing and New Address
+                                                    <div className={classes.tabRoot}>
+                                                        <AppBar position='static'>
+                                                            <Tabs value={tabValue} onChange={this.tabChangeHandler}>
+                                                                <Tab label='EXISTING ADDRESS' />
+                                                                <Tab label='NEW ADDRESS' />
+                                                            </Tabs>
+                                                        </AppBar>
 
-                                                                        {/* Existing Address  -  Details*/}
-                                                                        <Typography variant='subtitle1'>
-                                                                            {address.flat_building_name}
-                                                                        </Typography>
+                                                        {/* Existing Address */}
+                                                        {tabValue === 0 &&
+                                                        <TabContainer className={classes.existingAddressTabContainer}>
+                                                            {this.state.customerExistingAddresses === null ?
+                                                                <Typography variant='h6' color='textSecondary'>
+                                                                    There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option.
+                                                                </Typography>
+                                                                :
+                                                                <GridList
+                                                                    className={classes.gridList}
+                                                                    cols={3}
+                                                                    cellHeight='auto'
+                                                                >
+                                                                    {this.state.customerExistingAddresses.map(address => (
+                                                                        <GridListTile
+                                                                            key={'address' + address.id}
+                                                                            id={this.state[address.id] || 'unselect-address'}
+                                                                            onClick={() => this.existingAddressOnClickHandler(address.id)}
+                                                                            className={classes.existingAddressGridListTile}
+                                                                            classes={{ tile: classes.existingAddressGridListTileTile }}
+                                                                        >
 
-                                                                        <Typography variant='subtitle1'>
-                                                                            {address.locality}
-                                                                        </Typography>
+                                                                            {/* Existing Address  -  Details*/}
+                                                                            <Typography variant='subtitle1'>
+                                                                                {address.flat_building_name}
+                                                                            </Typography>
 
-                                                                        <Typography variant='subtitle1'>
-                                                                            {address.city}
-                                                                        </Typography>
+                                                                            <Typography variant='subtitle1'>
+                                                                                {address.locality}
+                                                                            </Typography>
 
-                                                                        <Typography variant='subtitle1'>
-                                                                            {address.state.state_name}
-                                                                        </Typography>
+                                                                            <Typography variant='subtitle1'>
+                                                                                {address.city}
+                                                                            </Typography>
 
-                                                                        <Typography variant='subtitle1'>
-                                                                            {address.pincode}
-                                                                        </Typography>
+                                                                            <Typography variant='subtitle1'>
+                                                                                {address.state.state_name}
+                                                                            </Typography>
 
-                                                                        {/* Check Existing address */}
-                                                                        <CheckCircleIcon
-                                                                            className={classes.existingAddressCheckCircle}
-                                                                            nativeColor={this.state[address.id] === 'select-address' ? 'green' : 'grey'}
-                                                                        />
+                                                                            <Typography variant='subtitle1'>
+                                                                                {address.pincode}
+                                                                            </Typography>
 
-                                                                    </GridListTile>
-                                                                ))}
-                                                            </GridList>
+                                                                            {/* Check Existing address */}
+                                                                            <CheckCircleIcon
+                                                                                className={classes.existingAddressCheckCircle}
+                                                                                htmlColor={this.state[address.id] === 'select-address' ? 'green' : 'grey'}
+                                                                            />
+
+                                                                        </GridListTile>
+                                                                    ))}
+                                                                </GridList>
+                                                            }
+                                                        </TabContainer>
                                                         }
-                                                    </TabContainer>
-                                                    }
 
-                                                    {/* New Address */}
-                                                    {tabValue === 1 &&
-                                                    <TabContainer>
+                                                        {/* New Address */}
+                                                        {tabValue === 1 &&
+                                                        <TabContainer>
 
-                                                        {/* New address - Details */}
-                                                        <FormControl required>
-                                                            <InputLabel htmlFor='flatBuildingNo'>Flat / Building No.</InputLabel>
-                                                            <Input
-                                                                id='flatBuildingNo'
-                                                                type='text'
-                                                                flatbuildingno={this.state.flatBuildingNo}
-                                                                value={this.state.flatBuildingNo}
-                                                                onChange={this.flatBuildingNoChangeHandler}
-                                                            />
-                                                            <FormHelperText className={this.state.flatBuildingNoRequired} error={true}>
-                                                                <span>required</span>
-                                                            </FormHelperText>
-                                                        </FormControl>
-                                                        <br /><br />
+                                                            {/* New address - Details */}
+                                                            <FormControl required>
+                                                                <InputLabel htmlFor='flatBuildingNo'>Flat / Building No.</InputLabel>
+                                                                <Input
+                                                                    id='flatBuildingNo'
+                                                                    type='text'
+                                                                    flatbuildingno={this.state.flatBuildingNo}
+                                                                    value={this.state.flatBuildingNo}
+                                                                    onChange={this.flatBuildingNoChangeHandler}
+                                                                />
+                                                                <FormHelperText className={this.state.flatBuildingNoRequired} error={true}>
+                                                                    <span>required</span>
+                                                                </FormHelperText>
+                                                            </FormControl>
+                                                            <br /><br />
 
-                                                        <FormControl required>
-                                                            <InputLabel htmlFor='locality'>Locality</InputLabel>
-                                                            <Input
-                                                                id='locality'
-                                                                type='text'
-                                                                locality={this.state.locality}
-                                                                value={this.state.locality}
-                                                                onChange={this.localityChangeHandler}
-                                                            />
-                                                            <FormHelperText className={this.state.localityRequired} error={true}>
-                                                                <span>required</span>
-                                                            </FormHelperText>
-                                                        </FormControl>
-                                                        <br /><br />
+                                                            <FormControl required>
+                                                                <InputLabel htmlFor='locality'>Locality</InputLabel>
+                                                                <Input
+                                                                    id='locality'
+                                                                    type='text'
+                                                                    locality={this.state.locality}
+                                                                    value={this.state.locality}
+                                                                    onChange={this.localityChangeHandler}
+                                                                />
+                                                                <FormHelperText className={this.state.localityRequired} error={true}>
+                                                                    <span>required</span>
+                                                                </FormHelperText>
+                                                            </FormControl>
+                                                            <br /><br />
 
-                                                        <FormControl required>
-                                                            <InputLabel htmlFor='city'>City</InputLabel>
-                                                            <Input
-                                                                id='city'
-                                                                type='text'
-                                                                city={this.state.city}
-                                                                value={this.state.city}
-                                                                onChange={this.cityChangeHandler}
-                                                            />
-                                                            <FormHelperText className={this.state.cityRequired} error={true}>
-                                                                <span>required</span>
-                                                            </FormHelperText>
-                                                        </FormControl>
-                                                        <br /><br />
+                                                            <FormControl required>
+                                                                <InputLabel htmlFor='city'>City</InputLabel>
+                                                                <Input
+                                                                    id='city'
+                                                                    type='text'
+                                                                    city={this.state.city}
+                                                                    value={this.state.city}
+                                                                    onChange={this.cityChangeHandler}
+                                                                />
+                                                                <FormHelperText className={this.state.cityRequired} error={true}>
+                                                                    <span>required</span>
+                                                                </FormHelperText>
+                                                            </FormControl>
+                                                            <br /><br />
 
-                                                        <FormControl required className={classes.newAddressFormControl}>
-                                                            <InputLabel htmlFor='newAddressstate'>State</InputLabel>
-                                                            <Select
-                                                                id='newAddressstate'
-                                                                newaddressstate={this.state.newAddressState}
-                                                                value={this.state.newAddressState}
-                                                                onChange={this.stateChangeHandler}
-                                                                className={classes.newAddressStateSelect}
-                                                                MenuProps={MenuProps}
+                                                            <FormControl required className={classes.newAddressFormControl}>
+                                                                <InputLabel htmlFor='newAddressstate'>State</InputLabel>
+                                                                <Select
+                                                                    id='newAddressstate'
+                                                                    newaddressstate={this.state.newAddressState}
+                                                                    value={this.state.newAddressState}
+                                                                    onChange={this.stateChangeHandler}
+                                                                    className={classes.newAddressStateSelect}
+                                                                    MenuProps={MenuProps}
+                                                                >
+                                                                    {this.state.states.map(state => (
+                                                                        <MenuItem key={'state' + state.id} value={state.state_name}>
+                                                                            {state.state_name}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                                <FormHelperText className={this.state.stateRequired} error={true}>
+                                                                    <span>required</span>
+                                                                </FormHelperText>
+                                                            </FormControl>
+                                                            <br /><br />
+
+                                                            <FormControl required>
+                                                                <InputLabel htmlFor='pincode'>Pincode</InputLabel>
+                                                                <Input
+                                                                    id='pincode'
+                                                                    type='text'
+                                                                    pincode={this.state.pincode}
+                                                                    value={this.state.pincode}
+                                                                    onChange={this.pincodeChangeHandler}
+                                                                />
+                                                                <FormHelperText className={this.state.pincodeRequired} error={true}>
+                                                                    <span>{this.state.pincodeRequiredMsg}</span>
+                                                                </FormHelperText>
+                                                            </FormControl>
+                                                            <br /><br />
+
+                                                            <Button
+                                                                variant='contained'
+                                                                color='secondary'
+                                                                onClick={this.saveAddressOnClickHandler}
                                                             >
-                                                                {this.state.states.map(state => (
-                                                                    <MenuItem key={'state' + state.id} value={state.state_name}>
-                                                                        {state.state_name}
-                                                                    </MenuItem>
+                                                                Save Address
+                                                            </Button>
+                                                        </TabContainer>
+                                                        }
+                                                    </div>
+                                                    : ''
+                                                }
+
+                                                {index === 1 ?
+                                                    <div className={classes.radioRoot}>
+                                                        <FormControl component='fieldset' className={classes.radioFormControl}>
+                                                            <FormLabel component='legend'>Select Mode of Payment</FormLabel>
+                                                            <RadioGroup
+                                                                aria-label='paymentModes'
+                                                                name='paymentModes'
+                                                                className={classes.radioGroup}
+                                                                value={this.state.radioValue}
+                                                                onChange={this.radioChangeHandler}
+                                                            >
+                                                                {this.state.paymentModes.map(paymentMode => (
+                                                                    <FormControlLabel
+                                                                        key={'paymentMode' + paymentMode.id}
+                                                                        value={paymentMode.payment_name.toLowerCase()}
+                                                                        control={<Radio />}
+                                                                        label={paymentMode.payment_name}
+                                                                        onClick={() => this.radioClickHandler(paymentMode.id)}
+                                                                    />
                                                                 ))}
-                                                            </Select>
-                                                            <FormHelperText className={this.state.stateRequired} error={true}>
-                                                                <span>required</span>
-                                                            </FormHelperText>
+                                                            </RadioGroup>
                                                         </FormControl>
-                                                        <br /><br />
+                                                    </div>
+                                                    : ''
+                                                }
 
-                                                        <FormControl required>
-                                                            <InputLabel htmlFor='pincode'>Pincode</InputLabel>
-                                                            <Input
-                                                                id='pincode'
-                                                                type='text'
-                                                                pincode={this.state.pincode}
-                                                                value={this.state.pincode}
-                                                                onChange={this.pincodeChangeHandler}
-                                                            />
-                                                            <FormHelperText className={this.state.pincodeRequired} error={true}>
-                                                                <span>{this.state.pincodeRequiredMsg}</span>
-                                                            </FormHelperText>
-                                                        </FormControl>
-                                                        <br /><br />
-
+                                                {/* Buttons for Step */}
+                                                <div className={classes.actionsContainer}>
+                                                    <div>
+                                                        <Button
+                                                            disabled={activeStep === 0}
+                                                            onClick={this.stepperBackHandler}
+                                                            className={classes.stepperButton}
+                                                        >
+                                                            Back
+                                                        </Button>
                                                         <Button
                                                             variant='contained'
-                                                            color='secondary'
-                                                            onClick={this.saveAddressOnClickHandler}
+                                                            color='primary'
+                                                            onClick={this.stepperNextHandler}
+                                                            className={classes.stepperButton}
                                                         >
-                                                            Save Address
+                                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                                         </Button>
-                                                    </TabContainer>
-                                                    }
+                                                    </div>
                                                 </div>
-                                                : ''
-                                            }
+                                            </StepContent>
+                                        </Step>
+                                    ))}
+                                </Stepper>
+                                {activeStep === steps.length && (
+                                    <Paper square elevation={0} className={classes.resetContainer}>
+                                        <Typography variant='h6'>
+                                            View the summary &#38; place your order now!
+                                        </Typography>
+                                        <Button onClick={this.stepperResetHandler} className={classes.stepperButton}>
+                                            CHANGE
+                                        </Button>
+                                    </Paper>
+                                )}
+                            </div>
+                        </Grid>
 
-                                            {index === 1 ?
-                                                <div className={classes.radioRoot}>
-                                                    <FormControl component='fieldset' className={classes.radioFormControl}>
-                                                        <FormLabel component='legend'>Select Mode of Payment</FormLabel>
-                                                        <RadioGroup
-                                                            aria-label='paymentModes'
-                                                            name='paymentModes'
-                                                            className={classes.radioGroup}
-                                                            value={this.state.radioValue}
-                                                            onChange={this.radioChangeHandler}
-                                                        >
-                                                            {this.state.paymentModes.map(paymentMode => (
-                                                                <FormControlLabel
-                                                                    key={'paymentMode' + paymentMode.id}
-                                                                    value={paymentMode.payment_name.toLowerCase()}
-                                                                    control={<Radio />}
-                                                                    label={paymentMode.payment_name}
-                                                                    onClick={() => this.radioClickHandler(paymentMode.id)}
-                                                                />
-                                                            ))}
-                                                        </RadioGroup>
-                                                    </FormControl>
-                                                </div>
-                                                : ''
-                                            }
-
-                                            {/* Buttons for Step */}
-                                            <div className={classes.actionsContainer}>
-                                                <div>
-                                                    <Button
-                                                        disabled={activeStep === 0}
-                                                        onClick={this.stepperBackHandler}
-                                                        className={classes.stepperButton}
-                                                    >
-                                                        Back
-                                                    </Button>
-                                                    <Button
-                                                        variant='contained'
-                                                        color='primary'
-                                                        onClick={this.stepperNextHandler}
-                                                        className={classes.stepperButton}
-                                                    >
-                                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </StepContent>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                            {activeStep === steps.length && (
-                                <Paper square elevation={0} className={classes.resetContainer}>
-                                    <Typography variant='h6'>
-                                        View the summary &#38; place your order now!
+                        {/* Cart Summary */}
+                        <Grid item={true} xs>
+                            <Card id='summary-card'>
+                                <CardContent>
+                                    <Typography variant='h5'>
+                                        Summary
                                     </Typography>
-                                    <Button onClick={this.stepperResetHandler} className={classes.stepperButton}>
-                                        CHANGE
-                                    </Button>
-                                </Paper>
-                            )}
-                        </div>
-                    </Grid>
+                                    <br />
 
-                    {/* Cart Summary */}
-                    <Grid item={true} xs>
-                        <Card id='summary-card'>
-                            <CardContent>
-                                <Typography variant='h5'>
-                                    Summary
-                                </Typography>
-                                <br />
-
-                                {/* Restaurant Name */}
-                                <Typography variant='h6' color='textSecondary' gutterBottom>
-                                    {this.state.customerCart.restaurantDetails.restaurant_name}
-                                </Typography>
+                                    {/* Restaurant Name */}
+                                    <Typography variant='h6' color='textSecondary' gutterBottom>
+                                        {this.state.customerCart.restaurantDetails.restaurant_name}
+                                    </Typography>
 
                                 {this.state.customerCart.cartItems.map(item => (
                                     <div key={'item' + item.id + item.category_name} className='flex width-100 pd-1-per'>
-                                        <div className='width-10'><i className={item.item_type === 'NON_VEG' ? 'fa fa-stop-circle-o non-veg' : 'fa fa-stop-circle-o veg'}></i></div>
-                                        <div className='width-50 capital checkout-grey-color'>{item.item_name}</div>
-                                        <div className='width-25 checkout-grey-color'>{item.count}</div>
-                                        <div className='width-4 checkout-grey-color'><i className='fa fa-inr'></i></div>
-                                        <div className='checkout-grey-color'>{item.totalItemPrice}.00</div>
+                                        <span>
+                                            <FontAwesomeIcon icon={faCircle} className={item.item_type === "VEG" ? "green" : "red"} />
+                                            {' '}
+                                            {item.item_name}
+                                            {' '}
+                                            {item.count}
+                                            {' '}
+                                            <FontAwesomeIcon icon={faRupeeSign} className="icon-size" />
+                                            {item.price.toFixed(2)}
+                                        </span>
                                     </div>
                                 ))}
 
-                                <Divider className={classes.summaryCardDivider} />
+                                    <Divider className={classes.summaryCardDivider} />
 
-                                {/* Net Amount */}
-                                <div className={classes.netAmount}>
-                                    Net Amount
-                                    <span className='right'>
-                                        <span className='width-5 checkout-grey-color'>
-                                            <i className='fa fa-inr'></i>
-                                        </span> {this.state.customerCart.totalPrice}.00
-                                    </span>
-                                </div>
+                                    {/* Net Amount */}
+                                    <div className={classes.netAmount}>
+                                        Net Amount
+                                        {' '}
+                                        <FontAwesomeIcon icon={faRupeeSign} className="icon-size" />
+                                        {this.state.customerCart.totalPrice.toFixed(2)}
+                                    </div>
 
-                                {/* Place Order */}
-                                <Button
-                                    variant='contained'
-                                    color='primary'
-                                    className={classes.placeOrderButton}
-                                    fullWidth={true}
-                                    onClick={this.placeOrderOnClickHandler}
-                                >
-                                    Place Order
-                                </Button>
-                            </CardContent>
-                        </Card>
+                                    {/* Place Order */}
+                                    <Button
+                                        variant='contained'
+                                        color='primary'
+                                        className={classes.placeOrderButton}
+                                        fullWidth={true}
+                                        onClick={this.placeOrderOnClickHandler}
+                                    >
+                                        Place Order
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     </Grid>
-                </Grid>
 
-                {/* Order Placed */}
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    open={this.state.openPlaceOrderMsg}
-                    autoHideDuration={5000}
-                    onClose={this.placeOrderMsgOnCloseHandler}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id='message-id'>{this.state.placeOrderMsg}</span>}
-                    action={[
-                        <IconButton
-                            key='close'
-                            aria-label='Close'
-                            color='inherit'
-                            onClick={this.placeOrderMsgOnCloseHandler}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
-            </div>
-        );
+                    {/* Order Placed */}
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={this.state.openPlaceOrderMsg}
+                        autoHideDuration={5000}
+                        onClose={this.placeOrderMsgOnCloseHandler}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id='message-id'>{this.state.placeOrderMsg}</span>}
+                        action={[
+                            <IconButton
+                                key='close'
+                                aria-label='Close'
+                                color='inherit'
+                                onClick={this.placeOrderMsgOnCloseHandler}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </div>
+            );
+        }
     }
 }
 

@@ -13,7 +13,6 @@ class Controller extends Component {
         this.baseUrl = "http://localhost:8080/api/";
     }
 
-
     render(){
         return(
             <Router>
@@ -40,13 +39,6 @@ class Controller extends Component {
                             )
                         }
                     />
-
-                    {/*
-                    <Route exact path='/home'  render={(props)=> <Home{...props} baseUrl={this.baseUrl}   /> }/>
-                    <Route exact path='/profile'  render={(props)=> <Profile{...props} baseUrl={this.baseUrl}   /> }/>
-*/}
-
-
                 </div>
             </Router>
 

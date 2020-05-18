@@ -34,3 +34,18 @@
     margin-bottom: 15px;
     margin-left: 25px;
 }
+
+.item-price{
+    display:flex;
+    align-items: baseline;
+    margin-left: auto;
+}
+
+.icon-size {
+    font-size: 15px;
+    padding-top: 5px;
+}
+
+.spacing {
+    margin-left: 10px;
+}
