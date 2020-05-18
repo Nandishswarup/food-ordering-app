@@ -97,6 +97,17 @@ const styles = theme => ({
     placeOrderButton: {
         marginTop: '20px',
     },
+    menuItemName: {
+        'margin-left': '10px',
+        'white-space': 'nowrap',
+        'text-transform': 'capitalize'
+    },
+    itemCount: {
+        'margin-left': '40px'
+    },
+    itemPrice: {
+        'padding-left': '5px'
+    },
 });
 
 const MenuProps = {
@@ -159,7 +170,7 @@ class Checkout extends Component {
         activeStep: 0,
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let that = this;
 
         // Customers' existing address
@@ -682,9 +693,7 @@ class Checkout extends Component {
                         <Grid item={true} xs>
                             <Card id='summary-card'>
                                 <CardContent>
-                                    <Typography variant='h5'>
-                                        Summary
-                                    </Typography>
+                                    <Typography variant='h5'>Summary</Typography>
                                     <br />
 
                                     {/* Restaurant Name */}
@@ -692,20 +701,29 @@ class Checkout extends Component {
                                         {this.state.customerCart.restaurantDetails.restaurant_name}
                                     </Typography>
 
-                                {this.state.customerCart.cartItems.map(item => (
-                                    <div key={'item' + item.id + item.category_name} className='flex width-100 pd-1-per'>
-                                        <span>
-                                            <FontAwesomeIcon icon={faCircle} className={item.item_type === "VEG" ? "green" : "red"} />
-                                            {' '}
-                                            {item.item_name}
-                                            {' '}
-                                            {item.count}
-                                            {' '}
-                                            <FontAwesomeIcon icon={faRupeeSign} className="icon-size" />
-                                            {item.price.toFixed(2)}
-                                        </span>
-                                    </div>
-                                ))}
+                                    {this.state.customerCart.cartItems.map(item => (
+                                        <div key={'item' + item.id + item.category_name} className='menu-item-container'>
+                                            {/*<span>*/}
+                                            {/*    <FontAwesomeIcon icon={faCircle} className={item.item_type === "VEG" ? "green" : "red"} />*/}
+                                            {/*    {' '}*/}
+                                            {/*    {item.item_name}*/}
+                                            {/*    {' '}*/}
+                                            {/*    {item.count}*/}
+                                            {/*    {' '}*/}
+                                            {/*    <FontAwesomeIcon icon={faRupeeSign} className="icon-size" />*/}
+                                            {/*    {item.price.toFixed(2)}*/}
+                                            {/*</span>*/}
+                                            <span className="spacing">
+                                                <FontAwesomeIcon icon={faCircle} className={item.item_type === "VEG" ? "green" : "red"} />
+                                             </span>
+                                            <Typography variant="subtitle1" className={classes.menuItemName}>{item.item_name}</Typography>
+                                            <Typography variant="subtitle1" className={classes.itemCount}>{item.count}</Typography>
+                                            <div className="item-price">
+                                                <FontAwesomeIcon icon={faRupeeSign} className="icon-size spacing" />
+                                                <Typography variant="subtitle1" component="p" className={classes.itemPrice} >{item.price.toFixed(2)}</Typography>
+                                            </div>
+                                        </div>
+                                    ))}
 
                                     <Divider className={classes.summaryCardDivider} />
 
