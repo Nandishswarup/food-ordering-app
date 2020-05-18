@@ -43,6 +43,7 @@ const styles = theme => ({
     ratingAvgRateDiv: {
         position: 'absolute',
         bottom: 20,
+
     },
     restaurantRatingDiv: {
         backgroundColor: '#EACC5E',
@@ -220,7 +221,7 @@ class Home extends Component {
                                     <div variant="body2" color="textSecondary" className="categories">
                                         {restaurant.categories}
                                     </div>
-                                    <div className="bottomcard-layout">
+                                    <div className={classes.ratingAvgRateDiv}>
                                         {/* restaurant rating */}
                                         <div className={classes.restaurantRatingDiv}>
                                             <Typography className={classes.restaurantRatingText} variant='body2'>
@@ -229,7 +230,7 @@ class Home extends Component {
                                         </div>
                                         {/* restaurant average price */}
                                         <Typography className={classes.restaurantAvgRateText} variant='body2'>
-                                            <i className="fa fa-inr"></i>  {restaurant.average_price} for two
+                                            <i className="fa fa-inr"></i>  ₹{restaurant.average_price} for two
                                         </Typography>
                                     </div>
 
