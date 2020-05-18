@@ -703,16 +703,6 @@ class Checkout extends Component {
 
                                     {this.state.customerCart.cartItems.map(item => (
                                         <div key={'item' + item.id + item.category_name} className='menu-item-container'>
-                                            {/*<span>*/}
-                                            {/*    <FontAwesomeIcon icon={faCircle} className={item.item_type === "VEG" ? "green" : "red"} />*/}
-                                            {/*    {' '}*/}
-                                            {/*    {item.item_name}*/}
-                                            {/*    {' '}*/}
-                                            {/*    {item.count}*/}
-                                            {/*    {' '}*/}
-                                            {/*    <FontAwesomeIcon icon={faRupeeSign} className="icon-size" />*/}
-                                            {/*    {item.price.toFixed(2)}*/}
-                                            {/*</span>*/}
                                             <span className="spacing">
                                                 <FontAwesomeIcon icon={faCircle} className={item.item_type === "VEG" ? "green" : "red"} />
                                              </span>
