@@ -167,7 +167,6 @@ class Details extends Component {
             Object.entries(this.state.cartItems).map(item => (
                 total += (item[1].count * item[1].price)
             ));
-
             this.setState({
                 cartItems: items,
                 cartItemsCount: count,
@@ -177,8 +176,6 @@ class Details extends Component {
             });
         } else
             return;
-
-
     }
 
     // This function leads to the checkout page if the customer is logged in (determined if the access token is present).

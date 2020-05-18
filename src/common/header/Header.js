@@ -341,7 +341,7 @@ class Header extends Component {
 
             if (this.readyState === 4 && xhrLogout.status === 200) {
                 sessionStorage.removeItem("uuid");
-                //sessionStorage.removeItem("access-token");
+                sessionStorage.removeItem("access-token");
 
                 that.setState({
                     loggedIn: false,
