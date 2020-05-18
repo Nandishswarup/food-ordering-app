@@ -505,7 +505,7 @@ class Checkout extends Component {
                                                                             {/* Check Existing address */}
                                                                             <CheckCircleIcon
                                                                                 className={classes.existingAddressCheckCircle}
-                                                                                nativeColor={this.state[address.id] === 'select-address' ? 'green' : 'grey'}
+                                                                                htmlColor={this.state[address.id] === 'select-address' ? 'green' : 'grey'}
                                                                             />
 
                                                                         </GridListTile>
