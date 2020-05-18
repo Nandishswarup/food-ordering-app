@@ -237,7 +237,7 @@ class Details extends Component {
         var keys = Object.keys(this.state.categories)
         return (
             <div>
-                <Header showSearchBox={false} changeBadgeVisibility={this.changeBadgeVisibility} />
+                <Header baseUrl={this.props.baseUrl} showSearchBox={false} changeBadgeVisibility={this.changeBadgeVisibility} />
                 <div className="restaurant-details-container">
                     <div>
                         <img className="restaurant-photo" src={this.state.restaurantPhotoUrl} alt={this.state.restaurantName} />
